@@ -5,7 +5,7 @@ let mapleader = " "
 set encoding=utf-8
 set clipboard=unnamedplus
 colorscheme desert
-"set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
+set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 filetype plugin indent on
 set encoding=utf-8
 set number
