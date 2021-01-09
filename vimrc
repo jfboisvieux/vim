@@ -1,13 +1,33 @@
 set background=dark
 syntax on
 inoremap jk <ESC>
+nnoremap <C-p> :<C-u>FZF<CR>
+" -----------
+" CoC settings
+"
+" CoC use <cr> to confirm completion 
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+" CoC use <Tab> for triggr completion
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+" 
 let mapleader = " "
-set encoding=utf-8
+"set encoding=utf-8
 set clipboard=unnamedplus
 colorscheme desert
-set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
+"set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 filetype plugin indent on
-set encoding=utf-8
+"set encoding=utf-8
 set number
 "split navigations
 nnoremap <C-J> <C-W><C-J>
@@ -22,6 +42,8 @@ set foldlevel=99
 " Enable folding with the spacebar
 nnoremap <space> za
 
+set expandtab
+set ts=8
 set smarttab
 set cindent
 
@@ -56,7 +78,7 @@ map! ,h2 <H2></H2><ESC>2ba
 map! ,h3 <H3></H3><ESC>2ba
 map! ,p  <p></p><ESC>2ba
 
-
+let g:rehash256 = 1
 let g:netrw_banner = 0
 
 au BufRead,BufNewFile *.stencil set filetype=html
@@ -69,10 +91,14 @@ let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
 let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
 let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
 
-call plug#begin()
-  " Plugin Section
-Plug 'elmcast/elm-vim'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver']
-call plug#end()
 "Config Section
+"Highlighting bad whitespace for haskell
+syn cluster hsRegions add=hsImport,hsLineComment,hsBlockComment,hsPragma
+syn cluster hsRegions add=cPreCondit,cCppOut,cCppOut2,cCppSkip
+syn cluster hsRegions add=cIncluded,cDefine,cPreProc,cComment,cCppString
+
+syn match tab display "\t" containedin=@hsRegions
+hi link tab Error
+syn match trailingWhite display "[[:space:]]\+$" containedin=@hsRegions
+hi link trailingWhite Error
+
